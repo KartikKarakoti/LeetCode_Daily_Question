@@ -1,0 +1,21 @@
+
+from typing import List
+
+class Solution:
+    def waysToSplitArray(self, nums: List[int]) -> int:
+        # Keep track of prefix and suffix sums
+        prefix_sum = 0
+        suffix_sum = sum(nums)  # Initially, all elements are in the suffix
+
+        valid_splits = 0
+        # Try each possible split position
+        for i in range(len(nums) - 1):
+            # Move current element from suffix to prefix
+            prefix_sum += nums[i]
+            suffix_sum -= nums[i]
+
+            # Check if this creates a valid split
+            if prefix_sum >= suffix_sum:
+                valid_splits += 1
+
+        return valid_splits
