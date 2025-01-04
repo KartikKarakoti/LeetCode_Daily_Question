@@ -1,0 +1,10 @@
+class Solution:
+    def countPalindromicSubsequence(self, s: str) -> int:
+        dic = {}
+        for i, ch in enumerate(s):
+            if ch in dic:
+                dic[ch][1] = i
+            else:
+                dic[ch] = [i, i]
+        return sum(len(set(s[l+1: r])) for l, r in dic.values())
+        
