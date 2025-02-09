@@ -1,0 +1,12 @@
+class Solution:
+    def countBadPairs(self, nums: List[int]) -> int:
+        n = len(nums)
+        total_pairs = n * (n - 1) // 2  # Total pairs (nC2 formula)
+        
+        counter = Counter([v - i for i, v in enumerate(nums)])
+
+        for v in counter.values():
+            if v > 1:
+                total_pairs -= ((v * (v - 1)) // 2) # Subtract good pairs
+        
+        return total_pairs
