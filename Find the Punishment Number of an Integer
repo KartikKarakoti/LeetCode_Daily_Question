@@ -1,0 +1,15 @@
+class Solution:
+    def punishmentNumber(self, n: int) -> int:
+        
+        # to check if we the square number can be arranged to satisfy the given conditions
+        def partable(n,li,i):
+            if(len(n)<=i):
+                return sum(li)==math.sqrt(int(n))
+            if(partable(n,li[:-1]+[int(str(li[-1])+n[i])],i+1) or partable(n,li+[int(n[i])],i+1)):return True
+            return False
+        
+        #iterating over the every number from 1 to n
+        res=0
+        for i in range(1,n+1):
+            if(partable(str(i*i),[int(str(i*i)[0])],1)):res+=i*i
+        return res
