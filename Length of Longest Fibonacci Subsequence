@@ -1,0 +1,20 @@
+class Solution:
+    def lenLongestFibSubseq(self, arr: List[int]) -> int:
+        val_to_idx = {num: i for i, num in enumerate(arr)}
+        lookup = {}
+        maxLength = 0
+
+        for curr_pos, curr in enumerate(arr):
+            lookup[curr] = defaultdict(lambda: 2)  # Default sequence length is 2
+            for prev_pos in range(curr_pos - 1, -1, -1):
+                prev = arr[prev_pos]
+                prev2 = curr - prev  # The required number to form a Fibonacci-like sequence
+                
+                if prev2 >= prev:  # Ensure valid sequence ordering
+                    break
+
+                if prev2 in lookup:
+                    lookup[curr][prev] = lookup[prev][prev2] + 1  # Extend sequence
+                    maxLength = max(maxLength, lookup[curr][prev])
+
+        return maxLength if maxLength > 2 else 0
