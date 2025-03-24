@@ -1,0 +1,16 @@
+class Solution:
+    def crackSafe(self, n: int, k: int) -> str:
+        alphabet = [str(n) for n in range(k)]
+        visited = set()
+        res = []
+
+        def dfs(password):
+            for digit in alphabet:
+                new_password = password + digit
+                if new_password not in visited:
+                    visited.add(new_password)
+                    dfs(new_password[1:])  
+                    res.append(digit)  
+
+        dfs("0" * (n - 1))  
+        return "".join(res) + ("0" * (n - 1))
