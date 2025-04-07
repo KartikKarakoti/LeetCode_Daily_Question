@@ -1,0 +1,20 @@
+class Solution:
+    def canPartition(self, nums):
+        total = sum(nums)
+        
+        # If the total sum is odd, it's impossible to partition it into two equal subsets
+        if total % 2 != 0:
+            return False
+        
+        target = total // 2
+        A = set([0])
+        
+        for num in nums:
+            # Add all possible sums of subsets that include the current number
+            for current_sum in list(A):
+                new_sum = current_sum + num
+                if new_sum == target:
+                    return True
+                A.add(new_sum)
+        
+        return False
