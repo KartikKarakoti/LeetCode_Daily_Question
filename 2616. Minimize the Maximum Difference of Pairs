@@ -1,0 +1,3 @@
+class Solution:
+    def minimizeMax(self, a: List[int], p: int) -> int:
+        return bisect_left(range(max(a)-min(a)),1,key=lambda d,q=0,a=sorted(a):sum(q:=q^1 and u-v<=d for v,u in pairwise(a))>=p)
