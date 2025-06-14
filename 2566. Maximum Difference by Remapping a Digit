@@ -1,0 +1,22 @@
+class Solution:
+    def minMaxDifference(self, num: int) -> int:
+        s = str(num)
+        sMax = list(s)
+        for ch in sMax:
+            if ch != '9':
+                target = ch
+                break
+        else:
+            target = None
+        if target:
+            sMax = [ '9' if c == target else c for c in sMax ]
+        sMin = list(s)
+        for ch in sMin:
+            if ch != '0':
+                target = ch
+                break
+        else:
+            target = None
+        if target:
+            sMin = [ '0' if c == target else c for c in sMin ]
+        return int(''.join(sMax)) - int(''.join(sMin))
