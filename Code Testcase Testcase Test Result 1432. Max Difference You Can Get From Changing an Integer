@@ -1,0 +1,23 @@
+class Solution:
+    def maxDiff(self, num: int) -> int:
+        def max_replace(n):
+            if n == 0:
+                return 0, -1
+            ans, d = max_replace(n//10)
+            if d == -1 and n%10 != 9:
+                d = n%10
+            ans = ans*10 + (9 if n%10 == d else n%10)
+            return ans, d
+
+
+        def min_replace(n):
+            if n <= 9:
+                return 1, -n
+            ans, d = min_replace(n//10)
+            if d == -1 and n%10 > 1:
+                d = n%10
+            ans = ans*10 + (1 if d < 0 and n%10 == -d else 0 if n%10 == d else n%10)
+            return ans, d
+
+        return max_replace(num)[0] - min_replace(num)[0]
+        
