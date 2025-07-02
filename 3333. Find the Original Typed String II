@@ -1,0 +1,36 @@
+class Solution:
+    def possibleStringCount(self, word: str, k: int) -> int:
+        n = len(word)
+        runs = []
+        cnt = 1
+        for i in range(1, n):
+            if word[i] == word[i-1]:
+                cnt += 1
+            else:
+                runs.append(cnt)
+                cnt = 1
+        runs.append(cnt)
+        repeatsChars = len(runs)
+        low = k - repeatsChars
+        total = 1
+        for run in runs:
+            total = total * run % (10**9+7)
+        if low <= 0:
+            return total
+        extraRepeats = n - repeatsChars
+        if low > extraRepeats:
+            return 0
+        low -= 1
+        dp = [0] * (low + 1)
+        dp[0] = 1
+        for run in runs:
+            extraRepeats = run - 1
+            cum = 0
+            new = [0] * (low + 1)
+            for j in range(low + 1):
+                cum = (cum + dp[j]) % (10**9+7)
+                if j - extraRepeats - 1 >= 0:
+                    cum = (cum - dp[j - extraRepeats - 1]) % (10**9+7)
+                new[j] = cum
+            dp = new
+        return (total - sum(dp) % (10**9+7)) % (10**9+7)
