@@ -1,0 +1,22 @@
+import heapq
+class Solution:
+    def maxEvents(self, events: List[List[int]]) -> int:
+        events.sort()        
+        res, d = 0, events[0][0]
+        heap = []
+        while events or heap: 
+            # Add new events that can be attended on day `d`
+            while len(events) > 0 and events[0][0] == d:
+                heapq.heappush(heap, events.pop(0)[1])                
+
+            # remove events that are already completed
+            while heap and heap[0] < d:
+                heapq.heappop(heap)
+
+            # attend one event in day `d`
+            if len(heap) > 0:
+                res += 1
+                heapq.heappop(heap)
+            
+            d += 1
+        return res     
