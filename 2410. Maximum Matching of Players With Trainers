@@ -1,0 +1,9 @@
+class Solution:
+    def matchPlayersAndTrainers(self, players: List[int], trainers: List[int]) -> int:
+        players.sort()
+        trainers.sort()
+        it = iter(trainers)
+        return sum(1 for player in players if any(trainer >= player for trainer in it))
+
+
+        
