@@ -1,0 +1,19 @@
+class Solution:
+    def isValid(self, s: str) -> bool:
+        if len(s)<3:
+            return False # check if length is greater than 3
+        v,c=0,0
+        for i in s:
+            if i.isalpha():
+                if i in{'a','e','i','o','u','A','E','I','O','U'}:
+                    v+=1 # counting vowels
+                else:
+                    c+=1 # counting consonants 
+            elif i.isalnum():
+                pass # check is it is digit
+            else:
+                return False # not alphabet ,number then it is symbol
+        
+        if c>0 and v>0:
+            return True # checking that word atleast having one vowel ,one consonant 
+        return False
