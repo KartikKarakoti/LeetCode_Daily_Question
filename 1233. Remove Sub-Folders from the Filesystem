@@ -1,0 +1,8 @@
+class Solution:
+    def removeSubfolders(self, folder: list[str]) -> list[str]:
+        folder.sort()
+        answer = []
+        for f in folder:
+            if not answer or not f.startswith(answer[-1] + '/'):
+                answer.append(f)
+        return answer
