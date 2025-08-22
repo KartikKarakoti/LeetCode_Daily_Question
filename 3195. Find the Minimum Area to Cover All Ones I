@@ -1,0 +1,33 @@
+class Solution:
+    def minimumArea(self, grid: List[List[int]]) -> int:
+        dabba=[]
+        row=[]
+        col=[]
+        for j in range(len(grid)):
+            for k in range(len(grid[0])):
+                if grid[j][k]==1:
+                    row.append(j)
+                    col.append(k)
+                    dabba.append([j,k])
+        lp=[min(row),min(col)]
+        kp=[max(row),max(col)]
+        mp=lp[:]
+        c=1
+        if lp==kp:
+            return 1
+        potti={tuple(lp),tuple(kp)}
+        lol=True
+        while lol:
+            while lp[1]<kp[1]:
+                
+                
+                c+=1
+                lp[1]+=1
+                potti.add(tuple(lp))
+            if lp==kp:
+                lol=False
+                break
+            lp[1]=mp[1]
+            lp[0]+=1
+            potti.add(tuple(lp))
+        return len(potti)
