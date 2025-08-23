@@ -1,0 +1,47 @@
+class Solution:
+    def minimumSum(self, grid: List[List[int]]) -> int:
+
+        @lru_cache(None)
+        def area(r_beg: int, c_beg: int, r_end: int, c_end: int) -> int:
+
+            row_mx = col_mx = -inf
+            row_mn = col_mn =  inf
+            
+            for r, c in product(range(r_beg, r_end + 1), 
+                                range(c_beg, c_end + 1)):
+                if grid[r][c] == 1:
+                    if r < row_mn: row_mn = r
+                    if r > row_mx: row_mx = r
+                    if c < col_mn: col_mn = c
+                    if c > col_mx: col_mx = c
+
+            if row_mn == inf: return 0
+            return (row_mx - row_mn + 1) * (col_mx - col_mn + 1)
+
+        def horz_tricolor(comb):
+            r1, r2 = comb
+            return (area(0, 0,r1, n-1) +  area(r1+1, 0, r2, n-1) + 
+                                          area(r2+1, 0, m-1, n-1))
+        def vert_tricolor(comb):
+            c1, c2 = comb
+            return(area(0, 0, m-1, c1) + area(0, c1+1, m-1, c2) +
+                                           area(0, c2+1,  m-1, n-1))
+        def tripatch(coord):
+            r, c = coord
+            top, bot, lft, rgt = (
+                area(0, 0, r, n-1)  , area(r+1, 0,m-1, n-1),
+                area(0, 0, m-1, c)  , area(0, c+1,  m-1, n-1))
+
+            toplft, toprgt, botlft, botrgt = (
+                area(0, 0, r, c)    , area(0, c+1, r, n-1),
+                area(r+1, 0, m-1, c), area(r+1, c+1, m-1, n-1))              
+
+            return min(top + botlft + botrgt, bot + toplft + toprgt,
+                       lft + toprgt + botrgt, rgt + toplft + botlft)
+
+
+        m, n = len(grid), len(grid[0])
+
+        return min(min(map(tripatch, product(range(m), range(n))  )),
+                   min(map(horz_tricolor, combinations(range(m),2))),
+                   min(map(vert_tricolor, combinations(range(n),2))))
