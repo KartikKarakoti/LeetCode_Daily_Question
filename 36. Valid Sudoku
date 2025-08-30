@@ -1,0 +1,53 @@
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        # Checks the occurences of an element in the rows 
+        def rowCheck(element,row):
+            if board[row].count(element)==1:
+                return True
+            else:
+                return False
+        # Checks the occurences of an element in the columns
+        def colCheck(element,col):
+            count=0
+            for i in range(len(board)):
+                if board[i][col]==element:
+                    count+=1
+            if count==1:
+                return True
+            else:
+                return False
+        # Checks the occurences of an element in 3x3 boxes
+        def boxCheck(element,row,col):
+            count=0
+            # Dictionary to get the starting and ending values range
+            range_dict={0:[0,3],1:[0,3],2:[0,3],3:[3,6],4:[3,6],5:[3,6],6:[6,9],7:[6,9],8:[6,9]}
+            # Getting the range of start and ending value of row and column
+            row_val=range_dict.get(row)
+            col_val=range_dict.get(col)
+            # Separating this to another variable for easy use
+            start_row=row_val[0]
+            end_row=row_val[1]
+            start_col=col_val[0]
+            end_col=col_val[1]
+            # Iteration Start
+            for i in range(start_row,end_row):
+                for j in range(start_col,end_col):
+                    if board[i][j]==element:
+                        count+=1
+            if count==1:
+                return True
+            else:
+                return False
+        # Main
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                if board[i][j]!=".":
+                    # Checks each time whether these three functions giving True or not
+                    check_list=[]
+                    check_list.append(rowCheck(board[i][j],i))
+                    check_list.append(colCheck(board[i][j],j))
+                    check_list.append(boxCheck(board[i][j],i,j))
+                    # If the three functions did not return True then it is not a valid Sudoku
+                    if check_list.count(True)!=3:
+                        return False
+        return True
