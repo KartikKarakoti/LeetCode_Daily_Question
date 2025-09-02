@@ -1,0 +1,21 @@
+class Solution:
+    def numberOfPairs(self, points: List[List[int]]) -> int:
+        n = len(points)
+        res = 0
+
+        def valid(r, c, row, col):
+            x1, y1 = r
+            x2, y2 = c
+
+            for i, (x, y) in enumerate(points):
+                if (x1 <= x <= x2 and y1 >= y >= y2 and i != row and i != col):
+                    return False
+            return True
+        for r in range(n):
+            for c in range(n):
+                if r != c and (points[r][0] <= points [c][0] and points[r][1] >= points[c][1]):
+                    if valid(points[r], points[c] , r, c):
+                        res += 1
+        return res
+        
+        
