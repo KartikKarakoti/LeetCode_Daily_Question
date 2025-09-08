@@ -1,0 +1,10 @@
+class Solution:
+    def getNoZeroIntegers(self, n: int) -> List[int]:
+        i=0
+        j=n
+        while i<n and j>0:
+            if str(i).count("0")==0 and str(j).count("0")==0:
+                return [i,j]
+            else:
+                i+=1
+                j-=1
