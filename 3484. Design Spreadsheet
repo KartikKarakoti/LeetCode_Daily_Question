@@ -1,0 +1,20 @@
+class Spreadsheet:
+    def __init__(self, rows: int):
+        self.cells = {}  
+
+    def setCell(self, cell: str, value: int) -> None:
+        self.cells[cell] = value
+
+    def resetCell(self, cell: str) -> None:
+        self.cells.pop(cell, None)
+
+    def getValue(self, formula: str) -> int:
+        expr = formula[1:]  
+        left, right = expr.split('+')
+        return self._evalToken(left) + self._evalToken(right)
+
+    def _evalToken(self, token: str) -> int:
+        if token and token[0].isdigit():
+            return int(token)
+        else:
+            return self.cells.get(token, 0)
