@@ -1,0 +1,24 @@
+class Solution:
+    def fractionToDecimal(self, numerator: int, denominator: int) -> str:
+        sb = []
+        if (numerator > 0 and denominator < 0) or (numerator < 0 and denominator > 0):
+            sb.append("-")
+        num = abs(numerator)
+        den = abs(denominator)
+        sb.append(str(num // den))
+        num %= den
+        if num == 0:
+            return "".join(sb)
+        sb.append(".")
+        map_ = {}
+        while num != 0:
+            num *= 10
+            sb.append(str(num // den))
+            num %= den
+            if num in map_:
+                sb.insert(map_[num], "(")
+                sb.append(")")
+                break
+            else:
+                map_[num] = len(sb)
+        return "".join(sb)
