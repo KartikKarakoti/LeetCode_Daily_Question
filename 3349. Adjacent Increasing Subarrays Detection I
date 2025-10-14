@@ -1,0 +1,15 @@
+class Solution:
+    def isStrictlyIncreasing(self,array, start, end ):
+        for i in range(start+1, end):
+            if array[i-1]>=array[i]:
+                return False
+        return True
+    def hasIncreasingSubarrays(self, nums: List[int], k: int) -> bool:
+        start = 0
+        end = k
+        while (end+k<=len(nums)):
+            if self.isStrictlyIncreasing(nums,start,k+start) and self.isStrictlyIncreasing(nums,end,end+k):
+                return True
+            start+=1
+            end+=1
+        return False
