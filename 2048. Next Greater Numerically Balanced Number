@@ -1,0 +1,18 @@
+class Solution:
+    def bal(self, n: int) -> bool:
+        occ = {}
+        while n > 0:
+            d = n % 10
+            occ[d] = occ.get(d, 0) + 1
+            n //= 10
+        for x, freq in occ.items():
+            if x != freq:
+                return False
+        return True
+
+    def nextBeautifulNumber(self, n: int) -> int:
+        i = n + 1
+        while True:
+            if self.bal(i):
+                return i
+            i += 1
