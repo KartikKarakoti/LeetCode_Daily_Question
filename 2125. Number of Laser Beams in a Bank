@@ -1,0 +1,10 @@
+class Solution:
+    def numberOfBeams(self, bank: List[str]) -> int:
+        stack = []
+        for row in range(len(bank)):
+            if '1' in bank[row]:
+                stack.append(bank[row].count('1'))
+        beam = 0
+        for val in range(len(stack)-1):
+            beam += stack[val]*stack[val+1]
+        return beam
