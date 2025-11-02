@@ -1,0 +1,16 @@
+class Solution:
+    def countUnguarded(self, m: int, n: int, guards: List[List[int]], walls: List[List[int]]) -> int:
+        grid = [[True]*n for _ in range(m)]
+        total = m * n - len(guards) - len(walls)
+        for [a, b] in guards:
+            grid[a][b] = 'G'
+        for [a, b] in walls:
+            grid[a][b] = 'W'
+        for [row, column] in guards:
+            for (drow, dcol) in((0,1),(1,0),(-1,0),(0,-1)):
+                x, y = row + drow, column + dcol
+                while 0 <= x < m and 0 <= y < n and type(grid[x][y]) is bool:
+                    total -= grid[x][y]
+                    grid[x][y] = False
+                    x, y = x + drow, y + dcol
+        return total
