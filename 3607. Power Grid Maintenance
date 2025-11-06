@@ -1,0 +1,59 @@
+class Solution:
+    def processQueries(self, c: int, connections: List[List[int]], queries: List[List[int]]) -> List[int]:
+        # build the graph
+        G = [[] for _ in range(c + 1)]
+        for u, v in connections:
+            G[u].append(v)
+            G[v].append(u)
+        
+        # smallestConnected[j] stores the ID of the smallest station i that j is connected to.
+        smallestConnected = [0] * (c + 1)
+
+        def dfs(i, v):
+            # just "labels" the other nodes with itself
+            # it will be called on smaller elements
+            # first, so it guarantees that each connection
+            # is the smallest possible
+            if smallestConnected[i]: 
+                return
+            smallestConnected[i] = v
+            for j in G[i]:
+                dfs(j, v)
+            return
+        
+        for i in range(1, c + 1):
+            dfs(i, i)
+
+        # think of todo as a "backup plan"
+        # for the smaller stations in case 
+        # they go offline. 
+        # we check/pop smaller stations first
+        # that's why each list must be descending
+        todo = defaultdict(list)
+
+        # Each connected subgraph has their own "hub", aka the 
+        # smallest plant. Every time they need to re-connect
+        # they visit the todo list that the smallest plant keeps.
+
+        for i in range(c, 0, -1):
+            todo[smallestConnected[i]].append(i)
+        
+        ans = []
+        online = [1] * (c + 1)
+        for code, x in queries:
+            if code == 1:
+                # trivial case: x is online
+                if online[x]:
+                    ans.append(x)
+                    continue
+                # find out the smallest connected station first
+                y = smallestConnected[x]
+                # wipe out the ones that are offline
+                while todo[y] and online[todo[y][-1]] == 0:
+                    todo[y].pop()
+                # answer is either the smallest
+                # yet to be popped, or nothing at all
+                ans.append(todo[y][-1] if todo[y] else -1)
+                continue
+            online[x] = 0
+        return ans
