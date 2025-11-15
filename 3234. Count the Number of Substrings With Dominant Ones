@@ -1,0 +1,17 @@
+class Solution:
+    def numberOfSubstrings(self, s: str) -> int:
+        ans = 0 
+        vals = [-1]
+        for i, ch in enumerate(s): 
+            one = zero = 0
+            if ch == '1': one += 1
+            else: zero += 1
+            p = i 
+            for v in reversed(vals): 
+                one += p-v-1
+                ans += max(0, min(p-v, one-zero**2+1))
+                p = v 
+                zero += 1
+                if zero**2 > i: break 
+            if ch == '0': vals.append(i)
+        return ans 
