@@ -1,0 +1,13 @@
+class Solution:
+    def numSub(self, s: str) -> int:
+        n=len(s)
+        i=0
+        cnt1=0
+        while i<n:
+            cnt=0
+            while i<n and s[i]=='1':
+                cnt+=1
+                i+=1
+            cnt1+=((cnt*(cnt+1))//2)
+            i+=1
+        return cnt1 % 1000000007
