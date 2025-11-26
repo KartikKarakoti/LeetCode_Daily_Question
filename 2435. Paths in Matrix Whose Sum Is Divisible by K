@@ -1,0 +1,49 @@
+
+class Solution(object):
+    def numberOfPaths(self, grid, k):
+        """
+        Find number of paths from top-left to bottom-right 
+        where sum of elements is divisible by k
+        
+        :type grid: List[List[int]]
+        :type k: int
+        :rtype: int
+        """
+        r=len(grid)         # number of rows
+        c=len(grid[0])      # number of columns
+        M=10**9+7           # modulo value for large numbers
+        seen={}             # stores computed results to avoid recalculation
+        
+        def f(i,j,s):
+            """
+            Recursive function to count paths
+            i,j = current position in grid
+            s = current path sum modulo k
+            """
+            
+            # 🎯 BASE CASE: Reached bottom-right corner
+            if i==r-1 and j==c-1:
+                return 1 if s==0 else 0  # Valid path only if sum divisible by k
+            
+            # 🔍 MEMOIZATION: Check if already computed
+            if(i,j,s)in seen:
+                return seen[(i,j,s)]
+            
+            res=0  # stores total valid paths from current position
+            
+            # 🔄 RECURSIVE CASES: Try both possible moves
+            
+            # Move RIGHT (to next column)
+            if j+1<c:
+                res+=f(i,j+1,(s+grid[i][j+1])%k)
+            
+            # Move DOWN (to next row)
+            if i+1<r:
+                res+=f(i+1,j,(s+grid[i+1][j])%k)
+            
+            # 💾 STORE RESULT: Save to avoid recalculating
+            seen[(i,j,s)]=res%M
+            return seen[(i,j,s)]
+        
+        # 🚀 START: Begin from top-left with initial sum
+        return f(0,0,grid[0][0]%k)
