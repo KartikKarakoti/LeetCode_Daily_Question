@@ -1,0 +1,29 @@
+class Solution:
+    def maxKDivisibleComponents(self, n: int, edges: List[List[int]], values: List[int], k: int) -> int:
+        node_to_adjacent_nodes_map = defaultdict(list)
+        for u, v in edges:
+            node_to_adjacent_nodes_map[u].append(v)
+            node_to_adjacent_nodes_map[v].append(u)
+        
+        ret_val = 0
+        
+        def dfs (curr_node, parent):
+            nonlocal node_to_adjacent_nodes_map
+            nonlocal ret_val
+            running_sum = values[curr_node]
+
+            for adj_node in node_to_adjacent_nodes_map[curr_node]:
+                if (adj_node != parent):
+                    running_sum += dfs(adj_node, curr_node)
+            
+            if (running_sum % k == 0):
+                ret_val += 1
+                running_sum = 0
+        
+            return running_sum
+
+        running_sum = dfs(0, -1)
+        if (running_sum > 0):
+            ret_val += 1
+
+        return ret_val
