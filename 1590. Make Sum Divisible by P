@@ -1,0 +1,18 @@
+class Solution:
+    def minSubarray(self, nums: List[int], p: int) -> int:
+        n = len(nums)
+        re = sum(nums)%p
+        if re == 0: return 0
+        mp = {}
+        mp[0] = -1
+        res = inf
+        x = 0
+        for i, v in enumerate(nums):
+            x += v
+            # x-y = c*p + re
+            # y = -c*p + x-re
+            # y%p = (x-re)%
+            if (x-re)%p in mp: 
+                res = min(res, i-mp[(x-re)%p]) 
+            mp[x%p] = i
+        return res if res != inf and res != n else -1
