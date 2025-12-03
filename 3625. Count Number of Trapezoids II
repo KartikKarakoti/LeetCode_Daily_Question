@@ -1,0 +1,108 @@
+class Solution:
+    def countTrapezoids(self, points: List[List[int]]) -> int:
+        slopes=defaultdict(set)
+        """stores slope and the endpoints of lines having that slopes"""
+        h=defaultdict(dict)
+        """how many points are in the same infinite line as a given point ,as these are not parellal even though they have same slope ,we can subtract the lines formed by them from the total lines for a given slope"""
+        midpoints=defaultdict(dict)
+        """counting no. of lines that have the same mid points, as these lines act as diagonals of a parellelogram when all the endpoints are joined ,but two line segments can have same slope and midpoint but not form any quadrilateral as they are in the same infinite line
+        like one line (-8,0),(8,0)
+        another line (-4,0),(4,0)
+        when n lines have same midpoint,then n(n-1)//2 parallellograms are possible"""
+        def getslope(x,y,m,n):
+            if x==m:
+                return float('inf')
+            return (n-y)/(m-x)
+            """it's working even without all the normalisation and all"""
+            #dx=m-x
+            #dy=n-y
+            #g=gcd(abs(dx),abs(dy))
+            #dx//=g
+            #dy//=g
+            """dividing with gcd as we can get perfect integers for dx and dy and all lines(points) with same slope fall under the same (dx,dy)
+            like m-x=2,4,6,8   n-x=6,12,18,24
+            all these pairs have same slope and same dx,dy pair i.e., (1,3)"""
+            #if dx<0:
+            #    dx=-dx
+            #    dy=-dy 
+            """if denominator is negative,we are sending that minus to numerator
+            like dy/dx => 3/(-4) => -3/4"""
+            #if dx==0:
+            #    dy=float('inf')
+            """if denominator is zero then slope is equal to 'undefined' but here we are representing them seperately, so we can write dy as anything (as it doesn't matter ,as every line with dx=0 is parallel to x-axis no matter what the dy is and the slope is undefined irrespective of y1 and y2 in reality)"""
+            #return (dx,dy)
+
+            
+        """calculating slopes,midpoints and all, for all possible pairs of points"""
+        for p in range(len(points)):
+            x,y=points[p][0],points[p][1]
+            for q in range(p+1,len(points)):
+                m,n=points[q][0],points[q][1]
+                s=getslope(x,y,m,n)
+                slopes[s].add(((x,y),(m,n)))
+                h[(x,y)][s]=h[(x,y)].get(s,0)+1
+                h[(m,n)][s]=h[(m,n)].get(s,0)+1
+                mid=((x+m)/2,(y+n)/2)
+                """not divinding by 2 as floating point precision  representations result in different midpoints though they are same, like say 100/30 and 10/3 both are same but maybe due to representation of them as say 3.333333 and 3.333334 they both are treated as two different mid points"""
+                """(but dividing also worked here)"""
+                midpoints[mid][s]=midpoints[mid].get(s,0)+1
+                """we group no. of line segments for a midpoint based on slopes ,the line segments with same midpoint and same slope are on same infinite pline ,so they don't act as diagonals so we count no. of parallelograms each group can form with others excluding the line segments that are in the same slope group"""
+        
+        #print(slopes)
+        #print(len(slopes))
+        #print(h)
+        ans=0
+        #print("h",h[(1,-25)])
+        for s in slopes:
+            count=len(slopes[s])
+            if count<2:
+                """two or more lines need to have the same slope to form a trapezium """
+                continue
+            #print(count)
+            for l in slopes[s]:
+                temp=h[l[0]][s]
+                """temp=no.of points in the same line as the starting point of current line segment,which means the no. of collinear points on the infinite line where point l[0] is there and slope is s"""
+                c=count-(temp*(temp+1)//2)
+                
+                """removing the lines that are formed with the points on the same line as the l[0] ,so we have the lines that are parellel to the current line segment
+                the no. of trapeziums with curr line segment =no. of parellel lines for this current line segment"""
+                ans+=c       
+                #print(count,c)
+        ans//=2
+        #print("ans",ans)
+        """because the trapeziums are counted twice ,as we count for both parellel sides"""
+        #print(midpoints)
+        for j in midpoints:
+            tot=sum(midpoints[j].values())
+            for s in midpoints[j]:
+                curr=midpoints[j][s]
+                i=tot-curr
+                ans-=(i*curr)
+                tot-=curr
+            """we are removing the parellelograms' count from total ,as the parellelograms have two pairs of parallel sides and at this point we have already counted one trapezium for each pair of parallel sides and as a result one parallelogram results in counting of two trapeziums, which is incorrect"""
+            """counting how many parallelogramms each of line segment in curr slope group forms with remaining line segments(the ones with same midpoint), this is equal to the no. of lines in other slope groups for the same midpoint.We exclude lines that are in the same slope group as they are in same infinite line
+            we remove the current line segments from total before moving on, as we don't want these to be included in calculation for other groups, as this leads to double calculations"""
+        return ans
+
+
+        """below solution worked for 548/550 cases 🤧"""
+        #ans=set()
+        #for s in slopes:
+        #    if len(slopes[s])<2:
+        #        continue
+        #    for l1 in slopes[s]:
+        #        p1,p2=l1
+        #        for l2 in slopes[s]:
+        #            if l1==l2:
+        #                continue 
+        #            p3,p4=l2
+                    
+        #            if (p1,p3) in slopes[s] or (p3,p1) in slopes[s]  or (p2,p4) in slopes[s] or (p4,p2) in slopes[s]:
+        #                continue
+        """idea is that for each slope,we take all possible pairs of line segments and if the line segment with endpoints of p1 and p3 has same slope as these pair of line segments,then this means that the pairs of lines are not parallel but are on the same infinite line.so we don't consider them for trapezium"""
+                    #print("l1 l2",l1,l2)
+        #            ans.add(tuple(sorted([p1,p2,p3,p4])))
+        """we sorted the points of the trapezium and store it so that we consider only unique trapeziums"""
+        """this second solution is actually O(n^4),so had to struggle for the first one."""
+
+        #return len(ans)
